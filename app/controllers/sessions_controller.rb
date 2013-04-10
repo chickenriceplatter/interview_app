@@ -10,7 +10,12 @@ class SessionsController < ApplicationController
       if user.role == "Student"
         student = Student.find_by_email(params[:email])
           if user && user.authenticate(params[:password])
-            session[:user_id] = user.id
+            if params[:remember_me]
+              cookies.permanent[:auth_token] = user.auth_token
+            else
+              cookies[:auth_token] = user.auth_token
+            end
+            # session[:user_id] = user.id
             flash[:notice] = "Logged in!"
             redirect_to student_path(student.id)
           else
@@ -21,7 +26,12 @@ class SessionsController < ApplicationController
       elsif user.role == "Employer"
         employer = Employer.find_by_email(params[:email])
           if user && user.authenticate(params[:password])
-            session[:user_id] = user.id
+            if params[:remember_me]
+              cookies.permanent[:auth_token] = user.auth_token
+            else
+              cookies[:auth_token] = user.auth_token
+            end
+            # session[:user_id] = user.id
             flash[:notice] = "Logged in!"
             redirect_to employer_path(employer.id)
           else
@@ -36,7 +46,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    cookies.delete(:auth_token)
+    # session[:user_id] = nil
     flash[:notice] = "Logged Out!"
     redirect_to new_session_url
   end

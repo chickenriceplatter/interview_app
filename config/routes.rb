@@ -1,4 +1,5 @@
 InterviewApp::Application.routes.draw do
+
   root :to => 'students#index'
   
   get '/employers/employer_selection_modal' => 'employers#employer_selection_modal'
@@ -10,6 +11,7 @@ InterviewApp::Application.routes.draw do
   resources :students
   resources :preferences
   resources :interviews
+  resources :password_resets
 
   get '/matches' => 'matches#index'
   match 'auth/google_oauth2/callback', to: 'sessions#oauth'
